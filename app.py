@@ -78,7 +78,7 @@ tabs = dbc.Tabs(
 )
 
 layout = [
-    Header("Dash Deck Explorer", app),
+    Header("Real Estate Carbon Landscape 2023", app),
     html.Br(),
     dcc.Location(id="url", refresh=False),
     dbc.Row(
