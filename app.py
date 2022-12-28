@@ -87,9 +87,9 @@ layout = [
                 dbc.Card(
                     id="deck-card", style={"height": "calc(100vh - 110px)"}, body=True
                 ),
-                md=6,
+                md=8,
             ),
-            dbc.Col([app_selection, tabs], md=6),
+            dbc.Col([app_selection, tabs], md=4),
         ]
     ),
 ]
@@ -127,7 +127,7 @@ def update_demo(pathname):
 
     -----
     
-    HALLO 
+    Real estate is the second largest CO2 polluter in Switzerland after the food, transport and mobility sectors, i.e. it is responsible for more than a quarter (26.7%) of total CO2 emissions, which corresponds to 12.4 million tons of CO2 equivalents (as of 2017) according to the Federal Office for the Environment. Due to the increase in residential and commercial space, about 30% more building space is heated today than 30 years ago. Emissions vary greatly between regions depending on geographic location. Climate influences how much ex-ternal temperature needs to be regulated, both by heating and cooling. In addition, there are factors such as living space, heat generators, the condition of the building envelope, and also electricity consumption for light-ing and electronic devices.
 
     """)
 
