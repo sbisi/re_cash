@@ -29,6 +29,23 @@ re_cash_columns_random_CH = pd.read_csv("co2_landscape_random_CH.csv")
 
 """# visualizing with hexagon layer (pydeck)"""
 
+df = re_cash_columns_random_CH
+
+def is_not_ecological(co2_m2):
+    """Return a green RGB value if a location produces to much co2"""
+    if co2_m2 > 30.0:
+        return [255, 0, 187]
+    return[0, 187, 255]
+
+df["color"] = df["co2_m2"].apply(is_not_ecological)
+
+view_state = pdk.ViewState(latitude=46.7, longitude=8.1355, zoom=6, min_zoom=2)
+# Set height and width variables
+view = pdk.View(type="_GlobeView", controller=True, width=1000, height=700)
+
+COUNTRIES = "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_scale_rank.geojson"
+
+
 tooltip = {
    "html": "<b>Elevation Value:</b> {elevationValue}",
    "style": {
@@ -37,29 +54,46 @@ tooltip = {
    }
 }
 
-layer = pdk.Layer(
-    'HexagonLayer',  # `type` positional argument is here
-    re_cash_columns_random_CH, 
-    get_position=['Longitude', 'Latitude'],
-    auto_highlight=True,
-    elevation_scale=20,
-    pickable=True,
-    elevation_range=[0, 3000],
-    extruded=True,
-    coverage=1)
 
-view_state = pdk.ViewState(
-    longitude=8.1355,
-    latitude=46.7,
-    zoom=7,
-    min_zoom=6,
-    max_zoom=15,
-    pitch=40.5,
-    bearing=-20.36)
+layers = [
+    pdk.Layer(
+        # "GeoJsonLayer",
+        # "GridLayer", (COOL !)
+        "ContourLayer",
+        id="base-map",
+        data=COUNTRIES,
+        stroked=False,
+        filled=True,
+        get_fill_color=[200, 200, 200],
+    ),
+    pdk.Layer(
+        "ColumnLayer",
+        id="co2_m2",
+        data=df,
+        get_elevation="co2_m2",
+        get_position=["Longitude", "Latitude"],
+        elevation_scale=300,
+        pickable=True,
+        auto_highlight=True,
+        radius=200,
+        get_fill_color="color",
+    ),
+]
+
+r = pdk.Deck(
+    views=[view],
+    initial_view_state=view_state,
+    tooltip={"text": "{STRNAME}, {PLZNAME}, co2_m2: {co2_m2}"},
+    layers=layers,
+    # Note that this must be set for the globe to be opaque
+    parameters={"cull": True},
+)
+
+r.to_html("globe_view.html", css_background_color="black")
 
 
 # Combined all of it and render a viewport
-r = pdk.Deck(layers=[layer], 
+r = pdk.Deck(layers=[layers], 
              initial_view_state=view_state,
              tooltip=tooltip,
              api_keys={"mapbox":mapbox_api_token},

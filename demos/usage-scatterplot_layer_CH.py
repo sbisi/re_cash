@@ -14,10 +14,11 @@ import os
 
 import dash
 import dash_deck
-import dash_html_components as html
 import pydeck as pdk
 import pandas as pd
 
+from dash import dcc
+from dash import html
 # mapbox_api_token = os.getenv("MAPBOX_ACCESS_TOKEN")
 mapbox_api_token = "pk.eyJ1IjoicGV0ZXJzdGF1YjYxIiwiYSI6ImNsYnhjenFyejE1d3Q0MG55NjBjZDJ6aWoifQ.xgY2YrkCbL2pq0CletAT5g"
 

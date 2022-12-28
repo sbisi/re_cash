@@ -9,7 +9,6 @@ Green indicates a start point, and red indicates the destination.
 The data is collected by the US Census Bureau and viewable in the 2017
 LODES data set: https://lehd.ces.census.gov/data/
 """
-
 import os
 
 import dash
@@ -25,7 +24,7 @@ mapbox_api_token = "pk.eyJ1IjoicGV0ZXJzdGF1YjYxIiwiYSI6ImNsYnhjenFyejE1d3Q0MG55N
 
 
 # NUR REDUZIERTES FILE EINLESEN WEGEN GITHUB-LIMITIERUNG AUF 25 GB !
-re_cash_columns_canton_AG = pd.read_csv("co2_landscape_canton_AG.csv")
+re_cash_columns_community_Windisch = pd.read_csv("co2_landscape_community_Windisch.csv")
 
 """# visualizing with hexagon layer (pydeck)"""
 
@@ -37,9 +36,18 @@ tooltip = {
    }
 }
 
+view_state = pdk.ViewState(
+    longitude=8.21907,
+    latitude=47.4747,
+    zoom=10,
+    min_zoom=6,
+    max_zoom=25,
+    pitch=40.5,
+    bearing=-20.36)
+
 layer = pdk.Layer(
     'HexagonLayer',  # `type` positional argument is here
-    re_cash_columns_canton_AG, 
+    re_cash_columns_community_Windisch, 
     get_position=['Longitude', 'Latitude'],
     auto_highlight=True,
     elevation_scale=20,
@@ -48,23 +56,15 @@ layer = pdk.Layer(
     extruded=True,
     coverage=1)
 
+# special view state for Windisch
 view_state = pdk.ViewState(
-    longitude=8.1355,
-    latitude=46.7,
-    zoom=7,
+    longitude=8.21907,
+    latitude=47.4747,
+    zoom=10,
     min_zoom=6,
-    max_zoom=15,
+    max_zoom=25,
     pitch=40.5,
     bearing=-20.36)
-
-view_state = pdk.ViewState(
-    longitude=8.172154,   #Lenzburg
-    latitude=47.390444,   #lenzburg
-    zoom=8,
-    min_zoom=8,
-    max_zoom=12,
-    pitch=60.5,
-    bearing=-10.36)
 
 
 # Combined all of it and render a viewport

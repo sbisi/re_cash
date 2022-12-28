@@ -9,7 +9,6 @@ Green indicates a start point, and red indicates the destination.
 The data is collected by the US Census Bureau and viewable in the 2017
 LODES data set: https://lehd.ces.census.gov/data/
 """
-
 import os
 
 import dash
@@ -25,50 +24,35 @@ mapbox_api_token = "pk.eyJ1IjoicGV0ZXJzdGF1YjYxIiwiYSI6ImNsYnhjenFyejE1d3Q0MG55N
 
 
 # NUR REDUZIERTES FILE EINLESEN WEGEN GITHUB-LIMITIERUNG AUF 25 GB !
-re_cash_columns_random_CH = pd.read_csv("co2_landscape_random_CH.csv")
+re_cash_columns_Windisch_CH = pd.read_csv("co2_landscape_community_Windisch.csv")
 
-"""# visualizing with hexagon layer (pydeck)"""
+# EXAMPLE WINDISCH
 
-tooltip = {
-   "html": "<b>Elevation Value:</b> {elevationValue}",
-   "style": {
-        "backgroundColor": "steelblue",
-        "color": "white"
-   }
-}
+df = re_cash_columns_Windisch_CH
 
-layer = pdk.Layer(
-    'HexagonLayer',  # `type` positional argument is here
-    re_cash_columns_random_CH, 
-    get_position=['Longitude', 'Latitude'],
-    auto_highlight=True,
-    elevation_scale=20,
-    pickable=True,
-    elevation_range=[0, 3000],
-    extruded=True,
-    coverage=1)
+# Define a layer to display on a map
 
-view_state = pdk.ViewState(
-    longitude=8.1355,
-    latitude=46.7,
-    zoom=7,
-    min_zoom=6,
-    max_zoom=15,
-    pitch=40.5,
-    bearing=-20.36)
+layer_windisch = pdk.Layer(
+    "GridLayer", df, pickable=True, extruded=True, cell_size=30, elevation_scale=2, get_position=['Longitude', 'Latitude'],
+)
 
+# view_state = pdk.ViewState(latitude=46.7, longitude=8.22106, zoom=100, min_zoom=2)
+# Set height and width variables
+# view = pdk.View(type="_GlobeView", controller=True, width=1000, height=100)
 
-# Combined all of it and render a viewport
-r = pdk.Deck(layers=[layer], 
-             initial_view_state=view_state,
-             tooltip=tooltip,
+view_state = pdk.ViewState(latitude=47.4747, longitude=8.21907, zoom=14, bearing=0, pitch=50,width=100, height=100)
+
+# Render
+r = pdk.Deck(layers=[layer_windisch], 
+             initial_view_state=view_state, 
+             tooltip={"text": "{position}\nCount: {count}"},
              api_keys={"mapbox":mapbox_api_token},
              map_provider="mapbox",
-             map_style=pdk.map_styles.MAPBOX_DARK, 
-    )
+             map_style=pdk.map_styles.MAPBOX_DARK,       
+            )
 
-# Combined all of it and render a viewport
-r.to_html('peter_staub.html')
+
+# r.to_html("grid_layer.html")
 
 app = dash.Dash(__name__)
 

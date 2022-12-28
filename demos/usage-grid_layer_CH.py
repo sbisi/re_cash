@@ -27,36 +27,26 @@ mapbox_api_token = "pk.eyJ1IjoicGV0ZXJzdGF1YjYxIiwiYSI6ImNsYnhjenFyejE1d3Q0MG55N
 # NUR REDUZIERTES FILE EINLESEN WEGEN GITHUB-LIMITIERUNG AUF 25 GB !
 re_cash_columns_random_CH = pd.read_csv("co2_landscape_random_CH.csv")
 
-"""# visualizing with hexagon layer (pydeck)"""
+"""# visualizing with grid layer (pydeck)"""
 
-tooltip = {
-   "html": "<b>Elevation Value:</b> {elevationValue}",
-   "style": {
-        "backgroundColor": "steelblue",
-        "color": "white"
-   }
-}
+df = re_cash_columns_random_CH
+
+# Define a layer to display on a map
 
 layer = pdk.Layer(
-    'HexagonLayer',  # `type` positional argument is here
-    re_cash_columns_random_CH, 
-    get_position=['Longitude', 'Latitude'],
-    auto_highlight=True,
-    elevation_scale=20,
-    pickable=True,
-    elevation_range=[0, 3000],
-    extruded=True,
-    coverage=1)
+    "GridLayer", df, pickable=True, extruded=True, cell_size=200, elevation_scale=4, get_position=['Longitude', 'Latitude'],
+)
 
-view_state = pdk.ViewState(
-    longitude=8.1355,
-    latitude=46.7,
-    zoom=7,
-    min_zoom=6,
-    max_zoom=15,
-    pitch=40.5,
-    bearing=-20.36)
+# view_state = pdk.ViewState(latitude=46.7, longitude=8.1355, zoom=8, min_zoom=2)
+# Set height and width variables
+# view = pdk.View(type="_GlobeView", controller=True, width=1000, height=700)
 
+view_state = pdk.ViewState(latitude=46.7, longitude=8.1355, zoom=8, bearing=0, pitch=45)
+
+# Render
+# r = pdk.Deck(layers=[layer], initial_view_state=view_state, tooltip={"text": "{position}\nCount: {count}"},)
+
+tooltip={"text": "{position}\nCount: {count}"}
 
 # Combined all of it and render a viewport
 r = pdk.Deck(layers=[layer], 
@@ -68,7 +58,7 @@ r = pdk.Deck(layers=[layer],
     )
 
 # Combined all of it and render a viewport
-r.to_html('peter_staub.html')
+r.to_html('grid.html')
 
 app = dash.Dash(__name__)
 
